@@ -1,53 +1,90 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState } from 'react';
+import EditMenu from './EditMenu';
+import axiosWithAuth from '../utils/axiosWithAuth';
 
 const initialColor = {
-  color: "",
-  code: { hex: "" }
+  color: '',
+  code: { hex: '' },
 };
 
 const ColorList = ({ colors, updateColors }) => {
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
 
-  const editColor = color => {
+  const editColor = (color) => {
     setEditing(true);
     setColorToEdit(color);
   };
 
-  const saveEdit = e => {
+  const saveEdit = (e) => {
     e.preventDefault();
-
+    axiosWithAuth()
+      .put(`/api/colors/${colorToEdit.id}`, colorToEdit)
+      .then((res) => {
+        setEditing(false);
+        updateColors(
+          colors.map((colorItem) => {
+            if (colorItem.id === colorToEdit.id) {
+              return colorToEdit;
+            } else {
+              return colorItem;
+            }
+          })
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
-  const deleteColor = color => {
+  const deleteColor = (color) => {
+    axiosWithAuth()
+      .delete(`api/colors/${color.id}`)
+      .then((res) => {
+        updateColors(
+          colors.filter((colorItem) => {
+            return colorItem.id !== color.id;
+          })
+        );
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
   };
 
   return (
-    <div className="colors-wrap">
+    <div className='colors-wrap'>
       <p>colors</p>
       <ul>
-        {colors.map(color => (
+        {colors.map((color) => (
           <li key={color.color} onClick={() => editColor(color)}>
             <span>
-              <span className="delete" onClick={e => {
-                    e.stopPropagation();
-                    deleteColor(color)
-                  }
-                }>
-                  x
-              </span>{" "}
+              <span
+                className='delete'
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deleteColor(color);
+                }}
+              >
+                x
+              </span>{' '}
               {color.color}
             </span>
             <div
-              className="color-box"
+              className='color-box'
               style={{ backgroundColor: color.code.hex }}
             />
           </li>
         ))}
       </ul>
-      { editing && <EditMenu colorToEdit={colorToEdit} saveEdit={saveEdit} setColorToEdit={setColorToEdit} setEditing={setEditing}/> }
-
+      {editing && (
+        <EditMenu
+          colorToEdit={colorToEdit}
+          saveEdit={saveEdit}
+          setColorToEdit={setColorToEdit}
+          setEditing={setEditing}
+        />
+      )}
     </div>
   );
 };
