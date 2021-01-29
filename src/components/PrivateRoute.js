@@ -7,9 +7,10 @@ function PrivateRoute({ component: Component, ...rest }) {
       {...rest}
       render={() => {
         if (localStorage.getItem('token')) {
+          // if the local storage has a token, return the Component
           return <Component />;
         } else {
-          return <Redirect to='/' />;
+          return <Redirect to='/' />; //if not, redirect to login page
         }
       }}
     />
