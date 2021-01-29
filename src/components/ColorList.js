@@ -43,12 +43,12 @@ const ColorList = ({ colors, updateColors }) => {
       .then((res) => {
         updateColors(
           colors.filter((colorItem) => {
-            return colorItem.id !== color.id;
+            return colorItem.id !== color.id; // return all of the colors that DON'T match the id of the color chosen
           })
         );
       })
       .catch((err) => {
-        console.log(err.message);
+        console.log(err);
       });
   };
 

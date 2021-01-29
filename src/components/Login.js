@@ -4,8 +4,9 @@ import axios from 'axios';
 const Login = (props) => {
   // make a post request to retrieve a token from the api
   // when you have handled the token, navigate to the BubblePage route
-  const initialFormValues = { username: '', password: '' };
-  const [formValues, setFormValues] = useState(initialFormValues);
+  const initialFormValues = { username: '', password: '' }; // initial form values - empty strings
+  const [formValues, setFormValues] = useState(initialFormValues); //set default state as initalFormValues
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
@@ -18,11 +19,11 @@ const Login = (props) => {
       .then((res) => {
         console.log(res.data.payload);
         if (
-          formValues.username === 'Lambda School' &&
+          formValues.username === 'Lambda School' && //if the username and password is correct, set local storage to the token
           formValues.password === 'i<3Lambd4'
         ) {
           localStorage.setItem('token', res.data.payload);
-          props.history.push('/bubblepage');
+          props.history.push('/bubblepage'); // send user to Bubble Page
         }
       })
       .catch((err) => {
@@ -35,6 +36,7 @@ const Login = (props) => {
       <form onSubmit={handleSubmit}>
         <label htmlFor='username'>Username</label>
         <input
+          type='text'
           placeholder='username'
           id='username'
           name='username'
@@ -42,6 +44,7 @@ const Login = (props) => {
         />
         <label htmlFor='password'>Password</label>
         <input
+          type='password'
           placeholder='password'
           id='password'
           name='password'
