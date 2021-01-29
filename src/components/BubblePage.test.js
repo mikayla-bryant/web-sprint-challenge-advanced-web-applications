@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import BubblePage from './BubblePage';
 
 test('Renders BubblePage without errors', () => {
@@ -9,7 +9,11 @@ test('Renders BubblePage without errors', () => {
 });
 
 test('Fetches data and renders the bubbles on mounting', () => {
-  // Finish this test
+  render(<BubblePage />);
+  waitFor(() => {
+    const bubbles = screen.getAllByTestId('bubbles');
+    expect(bubbles);
+  });
 });
 
 //Task List
